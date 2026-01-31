@@ -1,7 +1,7 @@
 
 import React from "react";
 
-const video = "rueckblick_content/videos/video-output-F6994C4C-29EF-4334-B941-73F965C2365B-1.mp4";
+const video = "/videos/video-output-F6994C4C-29EF-4334-B941-73F965C2365B-1.mp4";
 
 export default function RueckblickVideo() {
   return (
