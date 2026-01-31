@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
+import { Listbox, Transition } from '@headlessui/react';
 import { RegistrationFormData, FormErrors } from '../types';
 import { Check, Loader2, Send } from 'lucide-react';
 
 const RegistrationForm: React.FC = () => {
+  const roleOptions = [
+    'Studierende/r',
+    'Freund, Familie',
+    'Hochschulangehörige/e',
+    'Firmenvertreter/in',
+    'Absolvent/in',
+    'Sonstige Rolle',
+  ];
   const [formData, setFormData] = useState<RegistrationFormData>({
     firstName: '',
     lastName: '',
     email: '',
-    organization: ''
+    role: '',
+    comments: '',
+    acceptPrivacy: false,
+    acceptProcessing: false
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -24,6 +36,9 @@ const RegistrationForm: React.FC = () => {
         newErrors.email = "Bitte eine gültige E-Mail eingeben";
     }
     
+    if (!formData.role) newErrors.role = "Bitte wählen Sie eine Option aus";
+    if (!formData.acceptPrivacy) newErrors.acceptPrivacy = "Bitte akzeptieren Sie die Datenschutzerklärung.";
+    if (!formData.acceptProcessing) newErrors.acceptProcessing = "Bitte stimmen Sie der Datenverarbeitung zu.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -64,17 +79,16 @@ const RegistrationForm: React.FC = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto relative group">
-      {/* Glow effect behind form */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-fuchsia-600 via-purple-600 to-yellow-600 rounded-3xl opacity-30 blur-xl group-hover:opacity-50 transition-opacity duration-1000" />
-      
-      <div className="relative bg-black/80 backdrop-blur-xl border border-white/10 p-8 md:p-12 rounded-3xl shadow-2xl">
-        <div className="mb-10 text-center md:text-left">
-          <h3 className="text-3xl font-bold text-white mb-2 font-[Rajdhani] uppercase">Jetzt anmelden</h3>
-          <p className="text-slate-400">Sichere dir deinen Platz für den Abend. Die Teilnahme ist kostenlos.</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
+    <>
+      <div className="max-w-2xl mx-auto relative group">
+        {/* Glow effect behind form */}
+        <div className="absolute -inset-1 bg-gradient-to-r from-fuchsia-600 via-purple-600 to-yellow-600 rounded-3xl opacity-30 blur-xl group-hover:opacity-50 transition-opacity duration-1000" />
+        <div className="relative bg-black/80 backdrop-blur-xl border border-white/10 p-8 md:p-12 rounded-3xl shadow-2xl">
+          <div className="mb-10 text-center md:text-left">
+            <h3 className="text-3xl font-bold text-white mb-2 font-[Rajdhani] uppercase">Jetzt anmelden</h3>
+            <p className="text-slate-400">Sichere dir deinen Platz für den Abend. Die Teilnahme ist kostenlos. (Uhrzeit: abends)</p>
+          </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-xs font-bold text-fuchsia-300/80 uppercase tracking-wider block">Vorname *</label>
@@ -112,15 +126,78 @@ const RegistrationForm: React.FC = () => {
             {errors.email && <span className="text-xs text-red-400">{errors.email}</span>}
           </div>
 
+
           <div className="space-y-2">
-            <label className="text-xs font-bold text-yellow-300/80 uppercase tracking-wider block">Unternehmen / Organisation (Optional)</label>
-            <input 
-              type="text"
-              value={formData.organization}
-              onChange={(e) => setFormData({...formData, organization: e.target.value})}
+            <label className="text-xs font-bold text-yellow-300/80 uppercase tracking-wider block">Ich bin ... *</label>
+            <Listbox value={formData.role} onChange={val => setFormData({ ...formData, role: val })}>
+              <div className="relative">
+                <Listbox.Button
+                  className={`w-full bg-white/5 border ${errors.role ? 'border-red-500/50 focus:border-red-500' : 'border-white/10 focus:border-fuchsia-500'} rounded-lg px-4 py-3 text-base text-left text-white font-[Rajdhani] font-normal tracking-wide outline-none transition-all duration-200 focus:shadow-[0_0_16px_rgba(250,204,21,0.15)] focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/80`}
+                >
+                  {formData.role || <span className="opacity-60 font-normal">Bitte wählen ...</span>}
+                </Listbox.Button>
+                <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
+                  <Listbox.Options className="absolute z-10 mt-2 max-h-72 w-full overflow-auto rounded-xl bg-black/80 py-2 text-lg shadow-2xl ring-2 ring-yellow-400/30 focus:outline-none animate-fade-in">
+                    {roleOptions.map((option) => (
+                      <Listbox.Option
+                        key={option}
+                        value={option}
+                        className={({ active, selected }) =>
+                          `cursor-pointer select-none relative py-3 px-5 font-[Rajdhani] tracking-wide transition-all duration-100
+                          ${active ? 'bg-yellow-400/20 text-yellow-200 scale-[1.03] shadow-[0_0_12px_rgba(250,204,21,0.15)]' : 'text-white'}
+                          ${selected ? 'font-extrabold text-yellow-300' : ''}`
+                        }
+                      >
+                        {option}
+                      </Listbox.Option>
+                    ))}
+                  </Listbox.Options>
+                </Transition>
+              </div>
+            </Listbox>
+            {errors.role && <span className="text-xs text-red-400">{errors.role}</span>}
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-yellow-300/80 uppercase tracking-wider block">Platz für Rückfragen, Anmerkungen</label>
+            <textarea
+              value={formData.comments}
+              onChange={e => setFormData({ ...formData, comments: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 transition-all"
-              placeholder="Firma GmbH / Hochschule"
+              placeholder="Deine Nachricht ..."
+              rows={3}
             />
+          </div>
+
+          <div className="space-y-3 mt-6">
+            <div className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="acceptPrivacy"
+                checked={formData.acceptPrivacy}
+                onChange={e => setFormData({ ...formData, acceptPrivacy: e.target.checked })}
+                className="mt-1 accent-yellow-500 focus:ring-2 focus:ring-yellow-400"
+              />
+              <label htmlFor="acceptPrivacy" className="text-xs text-slate-300 select-none">
+                Hiermit akzeptiere ich die{' '}
+                <a href="https://www.hs-aalen.de/datenschutz" target="_blank" rel="noopener noreferrer" className="underline text-yellow-300 hover:text-yellow-400">Datenschutzerklärung der Hochschule Aalen</a>.
+                <span className="text-pink-400"> *</span>
+              </label>
+            </div>
+            {errors.acceptPrivacy && <div className="text-xs text-red-400 ml-7">{errors.acceptPrivacy}</div>}
+            <div className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="acceptProcessing"
+                checked={formData.acceptProcessing}
+                onChange={e => setFormData({ ...formData, acceptProcessing: e.target.checked })}
+                className="mt-1 accent-yellow-500 focus:ring-2 focus:ring-yellow-400"
+              />
+              <label htmlFor="acceptProcessing" className="text-xs text-slate-300 select-none">
+                Mit der Speicherung und der Verarbeitung meiner Daten zu oben genannten Zwecken bin ich einverstanden. <span className="text-pink-400">*</span>
+              </label>
+            </div>
+            {errors.acceptProcessing && <div className="text-xs text-red-400 ml-7">{errors.acceptProcessing}</div>}
           </div>
 
           <button 
@@ -140,12 +217,15 @@ const RegistrationForm: React.FC = () => {
                   </>
               )}
           </button>
-          <p className="text-xs text-slate-500 text-center mt-4">
-              Mit der Anmeldung stimmst du zu, dass wir dich über das Event informieren dürfen.
-          </p>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+      <div className="text-center mt-24">
+        <span className="text-3xl md:text-4xl font-bold font-[Rajdhani] uppercase bg-gradient-to-r from-fuchsia-400 via-yellow-400 to-fuchsia-500 bg-clip-text text-transparent drop-shadow-[0_0_18px_rgba(250,204,21,0.15)] tracking-wider">
+          Wir freuen uns auf euch!
+        </span>
+      </div>
+    </>
   );
 };
 

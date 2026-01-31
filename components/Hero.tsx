@@ -32,7 +32,7 @@ const Hero: React.FC<HeroProps> = ({ onScrollToForm }) => {
         </h1>
 
         <p className="text-lg md:text-2xl text-slate-300 max-w-2xl mx-auto font-light leading-relaxed font-sans">
-          Ein Abend, der zeigt, was <span className="text-white font-medium border-b border-yellow-500/50">Human Centricity</span> bewegt.
+          Ein Abend (Uhrzeit: abends), der zeigt, was <span className="text-white font-medium border-b border-yellow-500/50">Human Centricity</span> bewegt.
         </p>
 
         {/* Info Pills */}
@@ -41,14 +41,14 @@ const Hero: React.FC<HeroProps> = ({ onScrollToForm }) => {
             <Calendar className="w-5 h-5 text-fuchsia-400" />
             <div className="flex flex-col items-start leading-tight">
               <span className="font-bold text-white uppercase tracking-wide">Do, 16.04.</span>
-              <span className="text-xs opacity-70">17:00 Uhr</span>
+              <span className="text-xs opacity-70">Abends</span>
             </div>
           </div>
           <div className="flex items-center gap-3 bg-white/5 px-6 py-3 rounded-xl border border-white/10 hover:border-yellow-500/50 transition-colors backdrop-blur-sm">
             <MapPin className="w-5 h-5 text-yellow-400" />
             <div className="flex flex-col items-start leading-tight">
               <span className="font-bold text-white uppercase tracking-wide">DIS: Digital Innovation Space</span>
-              <span className="text-xs opacity-70">Anton-Huber-Straße, 73430 Aalen</span>
+              <span className="text-xs opacity-70">Anton Huber Straße 4, 73430 Aalen</span>
             </div>
           </div>
         </div>

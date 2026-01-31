@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import Hero from './components/Hero';
 import InfoSection from './components/InfoSection';
 import RegistrationForm from './components/RegistrationForm';
+import RueckblickCarousel from './components/RueckblickCarousel';
 
 const App: React.FC = () => {
   const formRef = useRef<HTMLDivElement>(null);
@@ -36,22 +37,18 @@ const App: React.FC = () => {
         
         <InfoSection />
         
-        <section ref={formRef} className="py-24 px-4 relative overflow-hidden">
+          <RueckblickCarousel />
+           <section ref={formRef} className="py-24 px-4 relative overflow-hidden">
              {/* Background glow for form section */}
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[600px] bg-fuchsia-900/10 rounded-full blur-[100px] -z-10" />
              <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-yellow-900/5 rounded-full blur-[120px] -z-10" />
-             
              <RegistrationForm />
-        </section>
+           </section>
 
-        <footer className="py-12 border-t border-white/5 bg-black relative z-10">
+        <footer className="py-5 border-t border-white/5 bg-black relative z-10">
           <div className="max-w-6xl mx-auto px-4 text-center">
             <p className="text-slate-600 text-sm mb-4">Illuminate & Connect © {new Date().getFullYear()}</p>
-            <div className="flex justify-center gap-8 text-xs text-slate-500 uppercase tracking-widest font-medium">
-               <a href="#" className="hover:text-fuchsia-400 transition-colors">Impressum</a>
-               <a href="#" className="hover:text-fuchsia-400 transition-colors">Datenschutz</a>
-               <a href="#" className="hover:text-fuchsia-400 transition-colors">Kontakt</a>
-            </div>
+            {/* Footer-Links entfernt */}
           </div>
         </footer>
       </div>
